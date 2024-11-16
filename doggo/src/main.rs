@@ -11,13 +11,14 @@ const HORSE_PATH: &str = "textures/horses.png";
 
 const PLATFORM_COLOR: Color = Color::srgba(0.0, 0.0, 0.0, 255.0);
 
-const FLOOR_THICKNESS: f32 = 10.0;
+const FLOOR_THICKNESS: f32 = 1.0;
 
 const COLOR_FLOOR: Color = Color::rgb(0.45, 0.55, 0.66);
 
-const SKY_HEIGHT_PERCENT: f32 = 70.0;
+const SKY_HEIGHT_PERCENT: f32 = 80.0;
+const GRASS_HEIGHT_PERCENT: f32 = 100.0 - SKY_HEIGHT_PERCENT;
 
-const GRASS_START_Y: f32 = WINDOW_BOTTOM_Y + (WINDOW_HEIGHT * 0.15);
+const GRASS_TOP_Y: f32 = WINDOW_BOTTOM_Y + ((WINDOW_HEIGHT * GRASS_HEIGHT_PERCENT / 100.0) * 1.0) - 0.1 * WINDOW_HEIGHT;
 // Add a new struct for the Horse component
 #[derive(Component)]
 struct Horse;
@@ -69,17 +70,18 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
             ..Default::default()
         },
         transform: Transform {
-            translation: Vec3::new(0.0, GRASS_START_Y, 0.0), // Position it at the bottom
+            translation: Vec3::new(0.0, GRASS_TOP_Y, 0.0), // Position it at the bottom
             scale: Vec3::new(
                 WINDOW_WIDTH,
-                WINDOW_HEIGHT * (100.0 - SKY_HEIGHT_PERCENT) / 100.0,
+                WINDOW_HEIGHT * GRASS_HEIGHT_PERCENT / 100.0,
                 1.0,
-            ), // 30% height
+            ),
             ..Default::default()
         },
         ..Default::default()
     });
 
+    // Stone
     commands
         .spawn(SpriteBundle {
             sprite: Sprite {
@@ -96,6 +98,7 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
         .insert(RigidBody::Dynamic)
         .insert(Collider::cuboid(0.5, 0.5));
 
+    // Floor
     commands
         .spawn(SpriteBundle {
             sprite: Sprite {
@@ -103,8 +106,8 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
                 ..Default::default()
             },
             transform: Transform {
-                translation: Vec3::new(0.0, 0.5*GRASS_START_Y - 15.0, 0.0),
-                // scale: Vec3::new(WINDOW_WIDTH, FLOOR_THICKNESS, 1.0),
+                translation: Vec3::new(0.0, GRASS_TOP_Y + 70.0, 0.0),
+                scale: Vec3::new(WINDOW_WIDTH, FLOOR_THICKNESS, 1.0),
                 ..Default::default()
             },
             ..Default::default()
