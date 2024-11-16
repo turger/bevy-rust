@@ -6,4 +6,4 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-bevy = "0.14" # Check for the latest version on crates.io
+bevy = { version = "0.14", features = ["dynamic_linking"] } # Check for the latest version on crates.io
