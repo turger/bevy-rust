@@ -17,7 +17,7 @@ fn main() {
             }),
             ..Default::default()
         }))
-        .add_startup_system(setup)
+        .add_systems(Startup, setup)
         .run();
 }
 
@@ -25,7 +25,7 @@ fn setup(mut commands: Commands) {
     // Draw the sky
     commands.spawn(SpriteBundle {
         sprite: Sprite {
-            color: Color::BLUE,
+            color: Color::srgba(0.0, 0.0, 255.0, 255.0),
             ..Default::default()
         },
         transform: Transform {
@@ -39,7 +39,7 @@ fn setup(mut commands: Commands) {
     // Draw the grass
     commands.spawn(SpriteBundle {
         sprite: Sprite {
-            color: Color::GREEN,
+            color: Color::srgba(0.0, 255.0, 0.0, 255.0),
             ..Default::default()
         },
         transform: Transform {
