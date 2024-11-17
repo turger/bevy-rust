@@ -85,7 +85,7 @@ fn setup(
         .spawn((
             SpriteBundle {
                 transform: Transform::from_scale(Vec3::splat(2.0))
-                    .with_translation(Vec3::new(0.0, 0.0, 0.0)), // Start at the center
+                    .with_translation(Vec3::new(-200.0, 0.0, 1.0)), // Start at the center
                 texture: texture.clone(),
                 ..default()
             },
@@ -97,7 +97,7 @@ fn setup(
             animation_config,
         ))
         .insert(RigidBody::Dynamic) // Make the horse a dynamic object
-        .insert(Collider::cuboid(12.0, 12.0)); // Adjust the size as needed
+        .insert(Collider::cuboid(20.0, 20.0)); // Adjust the size as needed
 
     // Draw the sky
     commands.spawn(SpriteBundle {
