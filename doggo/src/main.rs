@@ -1,5 +1,7 @@
 use bevy::input::common_conditions::input_just_pressed;
+use bevy::input::keyboard::KeyCode;
 use bevy::prelude::*;
+
 use bevy_rapier2d::prelude::*;
 
 use std::time::Duration;
@@ -44,6 +46,10 @@ impl AnimationConfig {
             frame_timer: Timer::new(Duration::from_secs_f32(1.0 / (fps as f32)), TimerMode::Once),
         }
     }
+
+    fn timer_from_fps(fps: u8) -> Timer {
+        Timer::new(Duration::from_secs_f32(1.0 / (fps as f32)), TimerMode::Once)
+    }
 }
 
 #[derive(Component)]
@@ -52,36 +58,11 @@ struct LeftSprite;
 #[derive(Component)]
 struct RightSprite;
 
-/*
-fn player_movement(
-    keyboard_input: Res<Input<KeyCode>>,
-    mut query: Query<(&Player, &mut Transform)>,
-) {
-    for (_, mut transform) in query.iter_mut() {
-        let mut direction = Vec3::ZERO;
-
-        if keyboard_input.pressed(KeyCode::ArrowLeft) {
-            direction.x -= 1.0;
-        }
-        if keyboard_input.pressed(KeyCode::ArrowRight) {
-            direction.x += 1.0;
-        }
-
-        transform.translation.x += direction.x * 5.0; // Adjust speed as necessary
-    }
-}
-    */
-
 // This system runs when the user clicks the left arrow key or right arrow key
 fn trigger_animation<S: Component>(mut query: Query<&mut AnimationConfig, With<S>>) {
-    let mut animation = query.single_mut();
-    // we create a new timer when the animation is triggered
-    animation.frame_timer = AnimationConfig::timer_from_fps(animation.fps);
-}
-
-impl AnimationConfig {
-    fn timer_from_fps(fps: u8) -> Timer {
-        Timer::new(Duration::from_secs_f32(1.0 / (fps as f32)), TimerMode::Once)
+    for mut animation in query.iter_mut() {
+        // Create a new timer when the animation is triggered
+        animation.frame_timer = AnimationConfig::timer_from_fps(animation.fps);
     }
 }
 
@@ -93,27 +74,30 @@ fn setup(
     commands.spawn(Camera2dBundle::default());
 
     // Load the horse sprite sheet
-    let texture = asset_server.load("textures/horses.png");
+    let texture = asset_server.load(HORSE_PATH);
     let layout = TextureAtlasLayout::from_grid(UVec2::splat(24), 8, 12, None, None); // 8 columns, 12 rows
     let texture_atlas_layout = texture_atlas_layouts.add(layout);
 
     // Create the player entity (first black horse)
     let animation_config = AnimationConfig::new(0, 2, 10); // Indices for the first black horse
 
-    commands.spawn((
-        SpriteBundle {
-            transform: Transform::from_scale(Vec3::splat(6.0))
-                .with_translation(Vec3::new(0.0, 0.0, 0.0)), // Start at the center
-            texture: texture.clone(),
-            ..default()
-        },
-        TextureAtlas {
-            layout: texture_atlas_layout.clone(),
-            index: animation_config.first_sprite_index,
-        },
-        Player,
-        animation_config,
-    ));
+    commands
+        .spawn((
+            SpriteBundle {
+                transform: Transform::from_scale(Vec3::splat(2.0))
+                    .with_translation(Vec3::new(0.0, 0.0, 0.0)), // Start at the center
+                texture: texture.clone(),
+                ..default()
+            },
+            TextureAtlas {
+                layout: texture_atlas_layout.clone(),
+                index: animation_config.first_sprite_index,
+            },
+            Player,
+            animation_config,
+        ))
+        .insert(RigidBody::Dynamic) // Make the horse a dynamic object
+        .insert(Collider::cuboid(12.0, 12.0)); // Adjust the size as needed
 
     // Draw the sky
     commands.spawn(SpriteBundle {
@@ -209,6 +193,26 @@ fn execute_animations(
     }
 }
 
+/*
+fn player_movement(
+    keyboard_input: Res<Input<KeyCode>>,
+    mut query: Query<(&Player, &mut Transform)>,
+) {
+    for (_, mut transform) in query.iter_mut() {
+        let mut direction = Vec3::ZERO;
+
+        if keyboard_input.pressed(KeyCode::ArrowLeft) {
+            direction.x -= 1.0;
+        }
+        if keyboard_input.pressed(KeyCode::ArrowRight) {
+            direction.x += 1.0;
+        }
+
+        transform.translation.x += direction.x * 5.0; // Adjust speed as necessary
+    }
+}
+*/
+
 fn main() {
     App::new()
         .add_plugins(
@@ -231,8 +235,8 @@ fn main() {
         .add_systems(
             Update,
             (
-                trigger_animation::<RightSprite>.run_if(input_just_pressed(KeyCode::ArrowRight)),
-                trigger_animation::<LeftSprite>.run_if(input_just_pressed(KeyCode::ArrowLeft)),
+                trigger_animation::<Player>.run_if(input_just_pressed(KeyCode::ArrowRight)),
+                trigger_animation::<Player>.run_if(input_just_pressed(KeyCode::ArrowLeft)),
             ),
         )
         .add_systems(Update, execute_animations)
