@@ -1,0 +1,4 @@
+- Bevy 0.14.2 is used
+- Use the latest version of Bevy
+- use Color::srgba for colors
+- Please always use KeyCode::ArrowLeft and KeyCode::ArrowRight

@@ -5,7 +5,19 @@ use bevy_rapier2d::prelude::*;
 use super::constants::*;
 
 #[derive(Component)]
-pub struct Player;
+pub struct Player {
+    pub vertical_velocity: f32,
+    pub on_ground: bool,
+}
+
+impl Default for Player {
+    fn default() -> Self {
+        Player {
+            vertical_velocity: 0.0,
+            on_ground: true,
+        }
+    }
+}
 
 pub fn spawn_player(
     commands: &mut Commands,
@@ -26,5 +38,5 @@ pub fn spawn_player(
         .insert(RigidBody::Dynamic)
         .insert(Collider::ball(0.5))
         .insert(KinematicCharacterController::default())
-        .insert(Player);
+        .insert(Player::default());
 }

@@ -7,6 +7,7 @@ mod systems;
 use game::constants::*;
 use game::setup;
 use systems::movement::movement;
+use systems::ground_detection::ground_detection;
 
 fn main() {
     App::new()
@@ -29,5 +30,6 @@ fn main() {
         ))
         .add_systems(Startup, setup)
         .add_systems(Update, movement)
+        .add_systems(Update, ground_detection)
         .run();
 }
