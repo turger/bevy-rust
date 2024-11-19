@@ -1,7 +1,9 @@
 use bevy::input::common_conditions::input_just_pressed;
 use bevy::input::keyboard::KeyCode;
+use bevy::prelude::Circle;
 use bevy::prelude::*;
 
+use bevy::sprite::MaterialMesh2dBundle;
 use bevy_rapier2d::prelude::*;
 
 use std::time::Duration;
@@ -20,11 +22,14 @@ const FLOOR_THICKNESS: f32 = 1.0;
 
 const COLOR_FLOOR: Color = Color::srgb(0.45, 0.55, 0.66);
 
+const COLOR_PLAYER: Color = Color::srgba(0.0, 0.0, 0.0, 255.0);
 const SKY_HEIGHT_PERCENT: f32 = 80.0;
 const GRASS_HEIGHT_PERCENT: f32 = 100.0 - SKY_HEIGHT_PERCENT;
 
 const GRASS_TOP_Y: f32 =
     WINDOW_BOTTOM_Y + ((WINDOW_HEIGHT * GRASS_HEIGHT_PERCENT / 100.0) * 1.0) - 0.1 * WINDOW_HEIGHT;
+
+const PLAYER_VELOCITY_X: f32 = 400.0;
 
 #[derive(Component)]
 struct Player;
@@ -68,17 +73,20 @@ fn trigger_animation<S: Component>(mut query: Query<&mut AnimationConfig, With<S
 
 fn setup(
     mut commands: Commands,
-    asset_server: Res<AssetServer>,
-    mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
+    // asset_server: Res<AssetServer>,
+    // mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut materials: ResMut<Assets<ColorMaterial>>,
 ) {
     commands.spawn(Camera2dBundle::default());
 
     // Load the horse sprite sheet
-    let texture = asset_server.load(HORSE_PATH);
-    let layout = TextureAtlasLayout::from_grid(UVec2::splat(24), 8, 12, None, None); // 8 columns, 12 rows
-    let texture_atlas_layout = texture_atlas_layouts.add(layout);
+    // let texture = asset_server.load(HORSE_PATH);
+    // let layout = TextureAtlasLayout::from_grid(UVec2::splat(24), 8, 12, None, None); // 8 columns, 12 rows
+    // let texture_atlas_layout = texture_atlas_layouts.add(layout);
 
     // Create the player entity (first black horse)
+    /*
     let animation_config = AnimationConfig::new(0, 2, 10); // Indices for the first black horse
 
     commands
@@ -98,6 +106,23 @@ fn setup(
         ))
         .insert(RigidBody::Dynamic) // Make the horse a dynamic object
         .insert(Collider::cuboid(20.0, 20.0)); // Adjust the size as needed
+    */
+
+    // draw the player
+    commands
+        .spawn(MaterialMesh2dBundle {
+            mesh: meshes.add(Circle::default()).into(),
+            material: materials.add(ColorMaterial::from(COLOR_PLAYER)),
+            transform: Transform {
+                translation: Vec3::new(-200.0, 0.0, 1.0),
+                scale: Vec3::new(30.0, 30.0, 1.0),
+                ..Default::default()
+            },
+            ..default()
+        })
+        .insert(RigidBody::Dynamic)
+        .insert(Collider::ball(0.5))
+        .insert(KinematicCharacterController::default());
 
     // Draw the sky
     commands.spawn(SpriteBundle {
@@ -213,6 +238,26 @@ fn player_movement(
 }
 */
 
+fn movement(
+    input: Res<ButtonInput<KeyCode>>,
+    time: Res<Time>,
+    mut query: Query<&mut KinematicCharacterController>,
+) {
+    let mut player = query.single_mut();
+
+    let mut translation = Vec2::new(0.0, 0.0);
+
+    if input.pressed(KeyCode::ArrowRight) {
+        translation.x += time.delta_seconds() * PLAYER_VELOCITY_X;
+    }
+
+    if input.pressed(KeyCode::ArrowLeft) {
+        translation.x += time.delta_seconds() * PLAYER_VELOCITY_X * -1.0;
+    }
+
+    player.translation = Some(translation);
+}
+
 fn main() {
     App::new()
         .add_plugins(
@@ -240,5 +285,6 @@ fn main() {
             ),
         )
         .add_systems(Update, execute_animations)
+        .add_systems(Update, movement)
         .run();
 }
