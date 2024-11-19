@@ -40,7 +40,7 @@ pub fn spawn_world(mut commands: Commands) {
         ..Default::default()
     });
 
-    // Stone platform
+    // Stone platform (set to fixed)
     commands
         .spawn(SpriteBundle {
             sprite: Sprite {
@@ -48,14 +48,14 @@ pub fn spawn_world(mut commands: Commands) {
                 ..Default::default()
             },
             transform: Transform {
-                translation: Vec3::new(0.0, 200.0, 0.0),
+                translation: Vec3::new(0.0, GRASS_TOP_Y + 90.0, 0.0),
                 scale: Vec3::new(40.0, 40.0, 1.0),
                 ..Default::default()
             },
             ..Default::default()
         })
-        .insert(RigidBody::Dynamic)
-        .insert(Collider::cuboid(0.5, 0.5));
+        .insert(RigidBody::Fixed) // Set to Fixed to make it static
+        .insert(Collider::cuboid(0.5, 0.5)); // Adjust the size of the collider as needed
 
     // Floor
     commands
