@@ -14,11 +14,16 @@ pub const JUMP_VELOCITY: f32 = 15000.0;
 pub const GRAVITY_REDUCTION_FACTOR: f32 = 0.5;
 pub const GRAVITY: f32 = -9.81;
 pub const GRAVITY_REDUCED: f32 = GRAVITY * GRAVITY_REDUCTION_FACTOR;
-pub const LEFT_BOUNDARY: f32 = -WINDOW_WIDTH / 2.0 + 20.0;
-pub const RIGHT_BOUNDARY: f32 = WINDOW_WIDTH / 2.0 - 20.0;
+pub const LEFT_BOUNDARY: f32 = -WINDOW_WIDTH / 2.0 + PLAYER_WIDTH;
+pub const RIGHT_BOUNDARY: f32 = WINDOW_WIDTH / 2.0 - PLAYER_WIDTH;
 // Position calculations
 pub const GRASS_TOP_Y: f32 =
     WINDOW_BOTTOM_Y + ((WINDOW_HEIGHT * GRASS_HEIGHT_PERCENT / 100.0) * 1.0) - 0.1 * WINDOW_HEIGHT;
+
+// Player constants
+pub const PLAYER_START_X: f32 = -200.0; // Starting X position of the player
+pub const PLAYER_START_Y: f32 = 0.0;     // Starting Y position of the player
+pub const PLAYER_WIDTH: f32 = 30.0;       // Width of the player
 
 // Colors
 // pink

@@ -29,8 +29,8 @@ pub fn spawn_player(
             mesh: meshes.add(Circle::default()).into(),
             material: materials.add(ColorMaterial::from(COLOR_PLAYER)),
             transform: Transform {
-                translation: Vec3::new(-200.0, 0.0, 1.0),
-                scale: Vec3::new(30.0, 30.0, 1.0),
+                translation: Vec3::new(PLAYER_START_X, PLAYER_START_Y, 1.0),
+                scale: Vec3::new(PLAYER_WIDTH, PLAYER_WIDTH, 1.0),
                 ..Default::default()
             },
             ..default()
