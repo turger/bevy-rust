@@ -36,3 +36,9 @@ pub const COLOR_PLATFORM: Color = Color::srgba(0.0, 0.0, 0.0, 255.0);
 pub const COLOR_SKY: Color = Color::srgba(0.0, 0.0, 255.0, 255.0);
 // lime green
 pub const COLOR_GRASS: Color = Color::srgba(0.0, 255.0, 0.0, 255.0);
+
+// Spritesheet constants
+pub const SPRITE_TILE_WIDTH: f32 = 64.0;
+pub const SPRITE_TILE_HEIGHT: f32 = 64.0;
+pub const SPRITESHEET_COLS: u32 = 12;
+pub const SPRITESHEET_ROWS: u32 = 8;

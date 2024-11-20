@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use bevy::sprite::MaterialMesh2dBundle;
 use bevy_rapier2d::prelude::*;
 
-use super::constants::*;
+use super::constants::{PLAYER_START_X, PLAYER_START_Y, PLAYER_WIDTH, COLOR_PLAYER};
 
 #[derive(Component)]
 pub struct Player {
