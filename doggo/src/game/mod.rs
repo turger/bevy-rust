@@ -1,10 +1,11 @@
 pub mod constants;
 pub mod player;
+pub mod player_sprite;
 pub mod world;
 
 use bevy::prelude::*;
 
-use self::{player::spawn_player, world::spawn_world, player::spawn_player_sprite};
+use self::{player::spawn_player, world::spawn_world, player_sprite::spawn_player as spawn_player_sprite};
 
 // for meshes and materials
 pub fn setup(
