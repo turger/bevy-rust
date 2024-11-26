@@ -1,13 +1,13 @@
 use bevy::prelude::*;
-use std::time::Duration;
 use bevy_rapier2d::prelude::*;
 
-use super::constants::{SPRITESHEET_COLS, SPRITESHEET_ROWS, SPRITE_TILE_HEIGHT, SPRITE_TILE_WIDTH};
+use super::constants::{PLAYER_START_X, PLAYER_START_Y, SNOOPY_SIZE, SPRITESHEET_COLS, SPRITESHEET_ROWS, SPRITE_TILE_HEIGHT, SPRITE_TILE_WIDTH};
 
 #[derive(Component)]
 pub struct PlayerSprite {
     pub vertical_velocity: f32,
     pub on_ground: bool,
+    pub facing_right: bool,
 }
 
 impl Default for PlayerSprite {
@@ -15,6 +15,7 @@ impl Default for PlayerSprite {
         PlayerSprite {
             vertical_velocity: 0.0,
             on_ground: true,
+            facing_right: true,
         }
     }
 }
@@ -22,35 +23,22 @@ impl Default for PlayerSprite {
 #[derive(Component)]
 struct AnimationConfig {
     first_sprite_index: usize,
-    last_sprite_index: usize,
-    fps: u8,
-    frame_timer: Timer,
 }
 
 impl AnimationConfig {
-    fn new(first: usize, last: usize, fps: u8) -> Self {
+    fn new(first: usize) -> Self {
         Self {
-            first_sprite_index: first,
-            last_sprite_index: last,
-            fps,
-            frame_timer: Self::timer_from_fps(fps),
+            first_sprite_index: first
         }
     }
-
-    fn timer_from_fps(fps: u8) -> Timer {
-        Timer::new(Duration::from_secs_f32(1.0 / (fps as f32)), TimerMode::Once)
-    }
 }
-
-#[derive(Component)]
-struct LeftSprite;
 
 pub fn spawn_player(
     commands: &mut Commands,
     asset_server: Res<AssetServer>,
     mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
 ) {
-    let texture = asset_server.load("textures/horses.png");
+    let texture = asset_server.load("textures/snoopy.png");
     let layout = TextureAtlasLayout::from_grid(
         UVec2::new(SPRITE_TILE_WIDTH as u32, SPRITE_TILE_HEIGHT as u32),
         SPRITESHEET_COLS,
@@ -60,26 +48,27 @@ pub fn spawn_player(
     );
     let texture_atlas_layout = texture_atlas_layouts.add(layout);
 
-    // the first (left-hand) sprite runs at 10 FPS
-    let animation_config_standing = AnimationConfig::new(1, 3, 10);
+    let animation_config = AnimationConfig::new(0);
 
-    // create the first (left-hand) sprite
     commands.spawn((
         SpriteBundle {
-            transform: Transform::from_scale(Vec3::splat(1.0))
-                .with_translation(Vec3::new(-50.0, 0.0, 1.0)),
+            transform: Transform {
+                translation: Vec3::new(PLAYER_START_X, PLAYER_START_Y, 1.0),
+                scale: Vec3::new(SNOOPY_SIZE, SNOOPY_SIZE, 1.0),
+                ..Default::default()
+            },
             texture: texture.clone(),
             ..Default::default()
         },
         TextureAtlas {
             layout: texture_atlas_layout.clone(),
-            index: animation_config_standing.first_sprite_index,
+            index: animation_config.first_sprite_index,
         },
-        LeftSprite,
-        animation_config_standing,
+        animation_config,
         PlayerSprite::default(),
-        Collider::ball(0.5),
+        Collider::cuboid(35.0, 52.0),
         ))
         .insert(RigidBody::Dynamic)
-        .insert(KinematicCharacterController::default());
+        .insert(KinematicCharacterController::default())
+        .insert(GravityScale(1.0));
 }
