@@ -8,6 +8,7 @@ use game::constants::*;
 use game::setup;
 use systems::movement::movement;
 use systems::ground_detection::ground_detection;
+use game::player_sprite::update_sprite_index;
 
 fn main() {
     App::new()
@@ -31,5 +32,6 @@ fn main() {
         .add_systems(Startup, setup)
         .add_systems(Update, movement)
         .add_systems(Update, ground_detection)
+        .add_systems(Update, update_sprite_index)
         .run();
 }

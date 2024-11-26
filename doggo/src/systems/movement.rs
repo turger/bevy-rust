@@ -13,10 +13,22 @@ pub fn movement(
 ) {
     // Handle PlayerSprite movement
     for (mut sprite_controller, mut player_sprite, mut transform) in sprite_query.iter_mut() {
+        // Update player state based on velocity and ground detection
+        if player_sprite.vertical_velocity > 0.1 {
+            println!("JUMPING {}", player_sprite.vertical_velocity);
+            player_sprite.index = 15;
+        } else {
+            // Idle
+            player_sprite.index = 0;
+        };
+        
         let mut translation = Vec2::new(0.0, 0.0);
 
         if !player_sprite.on_ground {
+            println!("NOT ON GROUND");
             player_sprite.vertical_velocity += GRAVITY_REDUCED * time.delta_seconds();
+        } else if player_sprite.vertical_velocity > 1000.0 {
+            player_sprite.vertical_velocity -= 1000.0;
         } else {
             player_sprite.vertical_velocity = 0.0; // Reset vertical velocity when on ground
         }

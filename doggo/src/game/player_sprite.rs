@@ -8,6 +8,7 @@ pub struct PlayerSprite {
     pub vertical_velocity: f32,
     pub on_ground: bool,
     pub facing_right: bool,
+    pub index: usize,
 }
 
 impl Default for PlayerSprite {
@@ -16,6 +17,7 @@ impl Default for PlayerSprite {
             vertical_velocity: 0.0,
             on_ground: true,
             facing_right: true,
+            index: 0,
         }
     }
 }
@@ -71,4 +73,12 @@ pub fn spawn_player(
         .insert(RigidBody::Dynamic)
         .insert(KinematicCharacterController::default())
         .insert(GravityScale(1.0));
+}
+
+pub fn update_sprite_index(
+    mut query: Query<(&PlayerSprite, &mut TextureAtlas)>,
+) {
+    for (player, mut atlas) in query.iter_mut() {
+        atlas.index = player.index;
+    }
 }
