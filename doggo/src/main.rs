@@ -30,8 +30,10 @@ fn main() {
             RapierDebugRenderPlugin::default(),
         ))
         .add_systems(Startup, setup)
-        .add_systems(Update, movement)
-        .add_systems(Update, ground_detection)
-        .add_systems(Update, update_sprite_index)
+        .add_systems(Update, (
+            ground_detection,
+            movement,
+            update_sprite_index,
+        ).chain())
         .run();
 }

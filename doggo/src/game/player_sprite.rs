@@ -15,7 +15,7 @@ impl Default for PlayerSprite {
     fn default() -> Self {
         PlayerSprite {
             vertical_velocity: 0.0,
-            on_ground: true,
+            on_ground: false,
             facing_right: true,
             index: 0,
         }
