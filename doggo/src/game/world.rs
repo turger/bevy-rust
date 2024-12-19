@@ -3,6 +3,9 @@ use bevy_rapier2d::prelude::*;
 
 use super::constants::*;
 
+#[derive(Component)]
+pub struct DeathPlatform;
+
 pub fn spawn_world(mut commands: Commands) {
     // Sky
     commands.spawn(SpriteBundle {
@@ -40,7 +43,7 @@ pub fn spawn_world(mut commands: Commands) {
         ..Default::default()
     });
 
-    // Stone platform (set to fixed)
+    // Stone platform (set to fixed) - Solid platform
     commands
         .spawn(SpriteBundle {
             sprite: Sprite {
@@ -54,9 +57,29 @@ pub fn spawn_world(mut commands: Commands) {
             },
             ..Default::default()
         })
-        .insert(RigidBody::Fixed) // Set to Fixed to make it static
-        .insert(Collider::cuboid(0.5, 0.5)); // Adjust the size of the collider as needed
+        .insert(RigidBody::Fixed)
+        .insert(Collider::cuboid(0.5, 0.5));
 
+    // Invisible death trigger
+    commands
+        .spawn(SpriteBundle {
+            sprite: Sprite {
+                color: COLOR_RED,
+                ..Default::default()
+            },
+            transform: Transform {
+                translation: Vec3::new(0.0, GRASS_TOP_Y + 90.0, 0.0),
+                scale: Vec3::new(40.0, 40.0, 1.0),
+                ..Default::default()
+            },
+            ..Default::default()
+        })
+        .insert(RigidBody::Fixed)
+        .insert(Sensor)
+        .insert(Collider::cuboid(0.5, 0.5))
+        .insert(ActiveEvents::COLLISION_EVENTS)
+        .insert(DeathPlatform);
+        
     // Floor
     commands
         .spawn(SpriteBundle {
@@ -72,5 +95,5 @@ pub fn spawn_world(mut commands: Commands) {
             ..Default::default()
         })
         .insert(RigidBody::Fixed)
-        .insert(Collider::cuboid(0.5, 0.5));
+        .insert(Collider::cuboid(WINDOW_WIDTH / 2.0, FLOOR_THICKNESS / 2.0));
 }

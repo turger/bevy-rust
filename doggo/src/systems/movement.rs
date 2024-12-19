@@ -28,6 +28,14 @@ pub fn movement(
         if input.just_pressed(KeyCode::Space) && player_sprite.on_ground {
             player_sprite.vertical_velocity = JUMP_VELOCITY;
             player_sprite.on_ground = false;
+            player_sprite.index = 13;
+            
+            // Start the timer
+            player_sprite.jump_timer.reset();
+        }
+
+        // Check timer and update index
+        if player_sprite.jump_timer.tick(time.delta()).just_finished() {
             player_sprite.index = 15;
         }
 

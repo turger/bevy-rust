@@ -21,8 +21,8 @@ pub const GRASS_TOP_Y: f32 =
     WINDOW_BOTTOM_Y + ((WINDOW_HEIGHT * GRASS_HEIGHT_PERCENT / 100.0) * 1.0) - 0.1 * WINDOW_HEIGHT;
 
 // Player constants
-pub const PLAYER_START_X: f32 = -200.0; // Starting X position of the player
-pub const PLAYER_START_Y: f32 = 0.0;     // Starting Y position of the player
+pub const PLAYER_START_X: f32 = -400.0; // Starting X position of the player
+pub const PLAYER_START_Y: f32 = GRASS_TOP_Y + 200.0;     // Starting Y position of the player
 pub const SNOOPY_SIZE: f32 = 1.0;       // Size of the snoopy
 
 // Colors
@@ -34,9 +34,11 @@ pub const COLOR_PLATFORM: Color = Color::srgba(0.0, 0.0, 0.0, 255.0);
 pub const COLOR_SKY: Color = Color::srgba(0.0, 0.0, 255.0, 255.0);
 // lime green
 pub const COLOR_GRASS: Color = Color::srgba(0.0, 255.0, 0.0, 255.0);
+//red
+pub const COLOR_RED: Color = Color::srgba(255.0, 0.0, 0.0, 255.0);
 
 // Spritesheet constants
-pub const SPRITE_TILE_WIDTH: f32 = 130.0;
+pub const SPRITE_TILE_WIDTH: f32 = 127.0;
 pub const SPRITE_TILE_HEIGHT: f32 = 140.0;
-pub const SPRITESHEET_COLS: u32 = 15;
-pub const SPRITESHEET_ROWS: u32 = 16;
+pub const SPRITESHEET_COLS: u32 = 17;
+pub const SPRITESHEET_ROWS: u32 = 15;

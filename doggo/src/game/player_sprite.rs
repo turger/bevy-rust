@@ -9,6 +9,8 @@ pub struct PlayerSprite {
     pub on_ground: bool,
     pub facing_right: bool,
     pub index: usize,
+    pub jump_timer: Timer,
+    pub death_timer: Timer,
 }
 
 impl Default for PlayerSprite {
@@ -18,6 +20,8 @@ impl Default for PlayerSprite {
             on_ground: false,
             facing_right: true,
             index: 0,
+            jump_timer: Timer::from_seconds(0.4, TimerMode::Once),
+            death_timer: Timer::from_seconds(0.4, TimerMode::Once),
         }
     }
 }
@@ -34,6 +38,9 @@ impl AnimationConfig {
         }
     }
 }
+
+#[derive(Component)]
+pub struct Player;
 
 pub fn spawn_player(
     commands: &mut Commands,
@@ -69,6 +76,7 @@ pub fn spawn_player(
         animation_config,
         PlayerSprite::default(),
         Collider::cuboid(35.0, 52.0),
+        Player,
         ))
         .insert(RigidBody::Dynamic)
         .insert(KinematicCharacterController::default())
