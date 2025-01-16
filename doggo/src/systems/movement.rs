@@ -39,7 +39,7 @@ pub fn movement(
             player_sprite.index = 15;
         }
 
-        if player_sprite.on_ground {
+        if player_sprite.on_ground && player_sprite.death_timer.finished() {
             player_sprite.index = 3;
         }
 

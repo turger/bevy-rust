@@ -21,7 +21,7 @@ pub fn handle_death(
             CollisionEvent::Started(e1, e2, _) => {
                 if (*e1 == player_entity && *e2 == death_platform) 
                     || (*e2 == player_entity && *e1 == death_platform) {
-                    println!("Player hit death platform!");
+                    println!("Player hit the death platform!");
                     player_sprite.index = 9;
                     player_sprite.death_timer.reset();
                 }

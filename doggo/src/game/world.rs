@@ -64,7 +64,7 @@ pub fn spawn_world(mut commands: Commands) {
     commands
         .spawn(SpriteBundle {
             sprite: Sprite {
-                color: COLOR_RED,
+                color: COLOR_PLATFORM,
                 ..Default::default()
             },
             transform: Transform {
@@ -76,7 +76,7 @@ pub fn spawn_world(mut commands: Commands) {
         })
         .insert(RigidBody::Fixed)
         .insert(Sensor)
-        .insert(Collider::cuboid(0.5, 0.5))
+        .insert(Collider::cuboid(0.6, 0.6))
         .insert(ActiveEvents::COLLISION_EVENTS)
         .insert(DeathPlatform);
         
