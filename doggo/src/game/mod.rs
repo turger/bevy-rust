@@ -1,10 +1,12 @@
 pub mod constants;
 pub mod player_sprite;
 pub mod world;
+pub mod level_1;
+pub mod level_2;
 
 use bevy::prelude::*;
 
-use self::{world::spawn_world, player_sprite::spawn_player};
+use self::{level_1::spawn_level_1, level_2::spawn_level_2, player_sprite::spawn_player};
 
 // for meshes and materials
 pub fn setup(
@@ -16,5 +18,6 @@ pub fn setup(
 ) {
     commands.spawn(Camera2dBundle::default());
     spawn_player(&mut commands, asset_server, texture_atlas_layouts);
-    spawn_world(commands);
+    spawn_level_1(commands);
+    // spawn_level_2(commands);
 }

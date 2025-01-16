@@ -13,14 +13,17 @@ pub fn handle_death(
     mut player_query: Query<(Entity, &mut Transform, &mut PlayerSprite), With<Player>>,
     time: Res<Time>,
 ) {
-    let death_platform = death_platform_query.single();
     let (player_entity, mut player_transform, mut player_sprite) = player_query.single_mut();
 
     for collision_event in collision_events.read() {
         match collision_event {
             CollisionEvent::Started(e1, e2, _) => {
-                if (*e1 == player_entity && *e2 == death_platform) 
-                    || (*e2 == player_entity && *e1 == death_platform) {
+                let is_death_collision = death_platform_query.iter().any(|death_platform| {
+                    (*e1 == player_entity && *e2 == death_platform) 
+                        || (*e2 == player_entity && *e1 == death_platform)
+                });
+
+                if is_death_collision {
                     println!("Player hit the death platform!");
                     player_sprite.index = 9;
                     player_sprite.death_timer.reset();
