@@ -57,14 +57,15 @@ pub fn movement(
         // Apply vertical movement
         translation.y += player_sprite.vertical_velocity * time.delta_seconds();
 
-        // Boundary checks
-        let new_position = sprite_controller.translation.unwrap_or_default() + translation;
-        
-        if new_position.x < LEFT_BOUNDARY {
-            translation.x = LEFT_BOUNDARY - new_position.x;
+        // Left boundary check
+        if transform.translation.x + translation.x < LEFT_BOUNDARY {
+            translation.x = LEFT_BOUNDARY - transform.translation.x;
         }
-        if new_position.x > RIGHT_BOUNDARY {
-            translation.x = RIGHT_BOUNDARY - new_position.x;
+        
+        // Right boundary check
+        if transform.translation.x + translation.x > RIGHT_BOUNDARY {
+            println!("RIGHT BOUNDARY, TODO: next level");
+            translation.x = RIGHT_BOUNDARY - transform.translation.x;
         }
 
         sprite_controller.translation = Some(translation);
